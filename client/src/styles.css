@@ -1,0 +1,187 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f8;
+  color: #18212f;
+}
+
+.page {
+  width: min(1050px, 92%);
+  margin: auto;
+  padding: 55px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(34px, 5vw, 54px);
+}
+
+.header p:not(.eyebrow) {
+  line-height: 1.5;
+}
+
+.count {
+  min-width: 105px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #fff;
+  border: 1px solid #e1e5ea;
+  text-align: center;
+}
+
+.count strong {
+  display: block;
+  font-size: 28px;
+}
+
+.count span {
+  font-size: 13px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e1e5ea;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 22px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+  gap: 10px;
+}
+
+.form input,
+.form select {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #cbd2dc;
+  border-radius: 9px;
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 15px;
+  background: #18212f;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.refresh {
+  background: #eef1f5;
+  color: #18212f;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #e6e9ee;
+  text-align: left;
+}
+
+th {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.present,
+.absent {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.present {
+  background: #e8f5ed;
+}
+
+.absent {
+  background: #faeaea;
+}
+
+.empty {
+  text-align: center;
+  padding: 30px;
+}
+
+@media (max-width: 850px) {
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .count {
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 550px) {
+  .page {
+    padding: 35px 0;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    display: block;
+  }
+
+  .count {
+    margin-top: 15px;
+    width: 100%;
+  }
+}
