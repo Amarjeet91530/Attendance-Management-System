@@ -14,6 +14,7 @@ export default function App() {
   const [records, setRecords] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   async function loadRecords() {
     try {
@@ -41,14 +42,34 @@ export default function App() {
     }));
   }
 
+  function startEdit(record) {
+    setEditingId(record.id);
+    setForm({
+      studentName: record.student_name,
+      rollNumber: record.roll_number,
+      date: record.date?.slice(0, 10),
+      status: record.status
+    });
+    setMessage("");
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setForm(emptyForm);
+    setMessage("");
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
     setMessage("");
 
+    const method = editingId ? "PUT" : "POST";
+    const url = editingId ? `${apiUrl}/${editingId}` : apiUrl;
+
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json"
         },
@@ -61,9 +82,18 @@ export default function App() {
         throw new Error(data.message || "Unable to save attendance");
       }
 
-      setRecords((current) => [data, ...current]);
+      if (editingId) {
+        setRecords((current) =>
+          current.map((record) => (record.id === data.id ? data : record))
+        );
+        setMessage("Attendance updated successfully.");
+      } else {
+        setRecords((current) => [data, ...current]);
+        setMessage("Attendance recorded successfully.");
+      }
+
+      setEditingId(null);
       setForm(emptyForm);
-      setMessage("Attendance recorded successfully.");
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -77,7 +107,7 @@ export default function App() {
         <div>
           <p className="eyebrow">Student Records</p>
           <h1>Attendance Management</h1>
-          <p>Record and review daily attendance from one dashboard.</p>
+          <p>Record, update, and review daily attendance from one dashboard.</p>
         </div>
         <div className="count">
           <strong>{records.length}</strong>
@@ -86,7 +116,7 @@ export default function App() {
       </header>
 
       <section className="card">
-        <h2>Mark attendance</h2>
+        <h2>{editingId ? "Update attendance" : "Mark attendance"}</h2>
 
         <form onSubmit={handleSubmit} className="form">
           <input
@@ -115,9 +145,15 @@ export default function App() {
             <option>Absent</option>
           </select>
           <button type="submit" disabled={loading}>
-            {loading ? "Saving..." : "Record attendance"}
+            {loading ? "Saving..." : editingId ? "Update record" : "Record attendance"}
           </button>
         </form>
+
+        {editingId && (
+          <button className="cancel" onClick={cancelEdit}>
+            Cancel edit
+          </button>
+        )}
 
         {message && <p className="message">{message}</p>}
       </section>
@@ -136,12 +172,13 @@ export default function App() {
                 <th>Roll No.</th>
                 <th>Date</th>
                 <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {records.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="empty">No attendance records found.</td>
+                  <td colSpan="5" className="empty">No attendance records found.</td>
                 </tr>
               ) : (
                 records.map((record) => (
@@ -153,6 +190,11 @@ export default function App() {
                       <span className={record.status === "Present" ? "present" : "absent"}>
                         {record.status}
                       </span>
+                    </td>
+                    <td>
+                      <button className="edit" onClick={() => startEdit(record)}>
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))
